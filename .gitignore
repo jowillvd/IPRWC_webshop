@@ -1,1 +1,9 @@
+# Default ignores
 .DS_Store
+
+# IntelliJ IDEA ignores
+/webshop-api/target/
+/webshop-api/.idea/
+/webshop-api/workshop-api.iml
+
+# Visual Studio Code ignores
