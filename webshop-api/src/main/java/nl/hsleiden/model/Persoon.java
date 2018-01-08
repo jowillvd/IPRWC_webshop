@@ -7,14 +7,30 @@ import nl.hsleiden.View;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.*;
+
 /**
  * Meer informatie over validatie:
  * http://hibernate.org/validator/
  *
  * @author Jordy van Dijk
  */
+@Entity
+@Table(name = "personen")
+@NamedQueries({
+        @NamedQuery(name = "Persoon.getAll",
+                query = "SELECT p FROM Persoon p"),
+        @NamedQuery(name = "Persoon.findByName",
+                query = "SELECT p FROM Persoon p "
+                        + "WHERE voornaam LIKE :naam"
+                        + " OR achternaam LIKE :naam")
+})
 public class Persoon {
 
+    /**
+     * Entity's unique identifier.
+     */
+    @Id
     @JsonView(View.Public.class)
     private long id;
 
@@ -28,17 +44,12 @@ public class Persoon {
     @JsonView(View.Public.class)
     private String achternaam;
 
-    private Persoon(Long id,
-                    String voornaam,
-                    String achternaam) {
-        this.id = id;
-        this.voornaam = voornaam;
-        this.achternaam = achternaam;
+    private Persoon() {
     }
 
     @JsonCreator
-    public Persoon(@JsonProperty("regisseur") String voornaam,
-                   @JsonProperty("release") String achternaam) {
+    public Persoon(@JsonProperty("voornaam") String voornaam,
+                   @JsonProperty("achternaam") String achternaam) {
         this.voornaam = voornaam;
         this.achternaam = achternaam;
     }

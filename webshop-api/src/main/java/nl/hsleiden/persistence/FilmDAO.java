@@ -1,40 +1,34 @@
 package nl.hsleiden.persistence;
 
+import io.dropwizard.hibernate.AbstractDAO;
 import nl.hsleiden.model.Film;
-import nl.hsleiden.model.Filmcast;
-import nl.hsleiden.model.Filmcrew;
-import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
-import org.jdbi.v3.sqlobject.customizer.Bind;
-import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
-import org.jdbi.v3.sqlobject.statement.SqlQuery;
-import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 import java.util.Optional;
 
-/**
- * @author Jordy van Dijk
- */
-public interface FilmDAO {
+public class FilmDAO extends AbstractDAO<Film> {
 
-    @SqlQuery("SELECT id, titel FROM films")
-    @RegisterBeanMapper(Film.class)
-    List<Film> getAll();
+    /**
+     * Constructor.
+     *
+     * @param sessionFactory Hibernate session factory.
+     */
+    public FilmDAO(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-    @SqlQuery("SELECT * FROM filmcast WHERE film = :id")
-    @RegisterBeanMapper(Filmcast.class)
-    List<Filmcast> getFilmcastByFilm(@Bind int id);
+    public List<Film> getAll() {
+        return list(namedQuery("Film.getAll"));
+    }
 
-    @SqlQuery("SELECT * FROM filmcrew WHERE film = :id")
-    @RegisterBeanMapper(Filmcrew.class)
-    List<Filmcrew> getFilmcrewByFilm(@Bind int id);
+    public List<Film> findByName(String name) {
+        return list(namedQuery("Film.findByName")
+                .setParameter("titel", "%" + name + "%")
+        );
+    }
 
-    @SqlQuery("SELECT * FROM films WHERE id = :id")
-    Optional<Film> getById(@Bind int id);
-
-    @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO films (`titel`, `regisseur`, `release`, `beschrijving`,`filmtrailer`)" +
-            " VALUES (:film.titel, :regisseur, :film.release, :film.beschrijving,:film.filmtrailer)")
-    int add(@BindBean("film") Film film, @Bind("regisseur") long regisseur);
+    public Optional<Film> findById(long id) {
+        return Optional.ofNullable(get(id));
+    }
 }

@@ -1,6 +1,8 @@
 package nl.hsleiden.persistence;
 
+import io.dropwizard.hibernate.AbstractDAO;
 import nl.hsleiden.model.Persoon;
+import org.hibernate.SessionFactory;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -11,17 +13,28 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import java.util.List;
 import java.util.Optional;
 
-public interface PersoonDAO {
+public class PersoonDAO extends AbstractDAO<Persoon> {
 
-    @SqlQuery("SELECT * FROM films")
-    @RegisterBeanMapper(Persoon.class)
-    List<Persoon> getAll();
+    /**
+     * Constructor.
+     *
+     * @param sessionFactory Hibernate session factory.
+     */
+    public PersoonDAO(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-    @SqlQuery("SELECT * FROM persoon WHERE id = :id")
-    Optional<Persoon> getById(@Bind int id);
+    public List<Persoon> getAll() {
+        return list(namedQuery("Persoon.getAll"));
+    }
 
-    @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO personen (voornaam, achternaam)" +
-            "VALUES (:voornaam, :achternaam)")
-    int add(@BindBean Persoon persoon);
+    public List<Persoon> findByName(String name) {
+        return list(namedQuery("Persoon.findByName")
+                .setParameter("naam", "%" + name + "%")
+        );
+    }
+
+    public Optional<Persoon> findById(long id) {
+        return Optional.ofNullable(get(id));
+    }
 }

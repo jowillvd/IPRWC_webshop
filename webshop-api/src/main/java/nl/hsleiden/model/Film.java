@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.jdbi.v3.core.mapper.Nested;
 import org.joda.time.format.ISODateTimeFormat;
 
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -17,8 +18,21 @@ import java.util.Date;
  *
  * @author Jordy van Dijk
  */
+@Entity
+@Table(name = "films")
+@NamedQueries({
+        @NamedQuery(name = "Film.getAll",
+                query = "SELECT f FROM Film f"),
+        @NamedQuery(name = "Film.findByName",
+                query = "SELECT f FROM Film f "
+                        + "WHERE titel like :titel")
+})
 public class Film {
 
+    /**
+     * Entity's unique identifier.
+     */
+    @Id
     @JsonView(View.Public.class)
     private long id;
 
@@ -27,6 +41,8 @@ public class Film {
     @JsonView(View.Public.class)
     private String titel;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     @JsonView(View.Protected.class)
     private Persoon regisseur;
 
@@ -39,18 +55,10 @@ public class Film {
     @JsonView(View.Protected.class)
     private String filmtrailer;
 
-    public Film(long id,
-            String titel,
-            @Nested("regisseur") Persoon regisseur,
-            String release,
-            String beschrijving,
-            String filmtrailer) {
-        this.id = id;
-        this.titel = titel;
-        this.regisseur = regisseur;
-        this.release = ISODateTimeFormat.date().parseDateTime(release).toDate();
-        this.beschrijving = beschrijving;
-        this.filmtrailer = filmtrailer;
+    /**
+     * A no-argument constructor.
+     */
+    public Film(){
     }
 
     @JsonCreator
@@ -82,12 +90,12 @@ public class Film {
         this.titel = titel;
     }
 
-    @Nested("regisseur")
+    @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     public Persoon getRegisseur() {
         return regisseur;
     }
 
-    @Nested("regisseur")
     public void setRegisseur(Persoon regisseur) {
         this.regisseur = regisseur;
     }

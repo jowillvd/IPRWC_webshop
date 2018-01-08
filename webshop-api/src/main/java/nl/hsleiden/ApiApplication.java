@@ -11,13 +11,19 @@ import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
+import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.forms.MultiPartBundle;
+import io.dropwizard.hibernate.HibernateBundle;
+import io.dropwizard.hibernate.ScanningHibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
 
+import nl.hsleiden.model.Film;
 import nl.hsleiden.model.Gebruiker;
+import nl.hsleiden.model.Persoon;
 import nl.hsleiden.service.AuthenticationService;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
@@ -33,6 +39,18 @@ import org.slf4j.LoggerFactory;
 public class ApiApplication extends Application<ApiConfiguration>
 {
     private final Logger logger = LoggerFactory.getLogger(ApiApplication.class);
+
+    private final HibernateBundle<ApiConfiguration> hibernateBundle
+            = new HibernateBundle<ApiConfiguration>(
+                    Film.class,
+                    Gebruiker.class,
+                    Persoon.class
+    ) {
+        @Override
+        public PooledDataSourceFactory getDataSourceFactory(ApiConfiguration configuration) {
+            return configuration.getDataSourceFactory();
+        }
+    };
     
     private ConfiguredBundle assetsBundle;
     private GuiceBundle guiceBundle;
@@ -49,11 +67,11 @@ public class ApiApplication extends Application<ApiConfiguration>
     public void initialize(Bootstrap<ApiConfiguration> bootstrap)
     {
         assetsBundle = (ConfiguredBundle) new ConfiguredAssetsBundle("/assets/", "/client", "index.html");
-        guiceBundle = createGuiceBundle(ApiConfiguration.class, new ApiGuiceModule());
+        guiceBundle = createGuiceBundle(ApiConfiguration.class, new ApiGuiceModule(hibernateBundle));
         
         bootstrap.addBundle(assetsBundle);
         bootstrap.addBundle(guiceBundle);
-        bootstrap.addBundle(new MultiPartBundle());
+        bootstrap.addBundle(hibernateBundle);
     }
     
     @Override

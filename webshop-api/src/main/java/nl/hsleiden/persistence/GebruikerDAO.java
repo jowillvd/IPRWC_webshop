@@ -1,12 +1,8 @@
 package nl.hsleiden.persistence;
 
+import io.dropwizard.hibernate.AbstractDAO;
 import nl.hsleiden.model.Gebruiker;
-import org.jdbi.v3.sqlobject.customizer.Bind;
-import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.customizer.BindMethods;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
-import org.jdbi.v3.sqlobject.statement.SqlQuery;
-import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,30 +10,36 @@ import java.util.Optional;
 /**
  * @author Jordy van Dijk
  */
-public interface GebruikerDAO {
+public class GebruikerDAO extends AbstractDAO<Gebruiker> {
 
-    @SqlQuery("SELECT * FROM gebruikers")
-    List<Gebruiker> getAll();
+    /**
+     * Constructor.
+     *
+     * @param sessionFactory Hibernate session factory.
+     */
+    public GebruikerDAO(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-    @SqlQuery("SELECT * FROM gebruikers WHERE email = :email")
-    Optional<Gebruiker> getByEmail(@Bind String email);
+    public List<Gebruiker> getAll() {
+        return list(namedQuery("Gebruiker.getAll"));
+    }
 
-    @SqlQuery("SELECT * FROM gebruikers WHERE id = :id")
-    Gebruiker getById(@Bind long id);
+    public List<Gebruiker> findByName(String name) {
+        return list(namedQuery("Gebruiker.findByName")
+                .setParameter("naam", "%" + name + "%")
+        );
+    }
 
-    @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO gebruikers (email, wachtwoord, voornaam, achternaam)" +
-            "VALUES (:email, :wachtwoord, :voornaam, :achternaam)")
-    int add(@BindBean Gebruiker gebruiker);
+    public Optional<Gebruiker> findById(long id) {
+        return Optional.ofNullable(get(id));
+    }
 
-    @SqlUpdate("UPDATE gebruikers " +
-            "SET email = :u.email," +
-            "    wachtwoord = :u.wachtwoord," +
-            "    voornaam = :u.voornaam," +
-            "    achternaam = :u.achternaam" +
-            "WHERE id = :id")
-    void update(@BindBean("u") Gebruiker gebruiker, @Bind long id);
+    public Optional<Gebruiker> findByEmail(String email) {
 
-    @SqlUpdate("DELETE FROM gebruikers WHERE id = :id")
-    void delete(@Bind long id);
+        return Optional.ofNullable(uniqueResult(namedQuery("Gebruiker.findByEmail")
+                .setParameter("mail", email))
+        );
+
+    }
 }

@@ -1,12 +1,15 @@
 package nl.hsleiden.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import nl.hsleiden.View;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.*;
 import java.security.Principal;
 import java.util.Date;
 
@@ -16,10 +19,27 @@ import java.util.Date;
  *
  * @author Jordy van Dijk
  */
+@Entity
+@Table(name = "gebruikers")
+@NamedQueries({
+        @NamedQuery(name = "Gebruiker.getAll",
+                query = "SELECT g FROM Gebruiker g"),
+        @NamedQuery(name = "Gebruiker.findByName",
+                query = "SELECT g FROM Gebruiker g "
+                        + "WHERE voornaam LIKE :naam"
+                        + " OR achternaam LIKE :naam"),
+        @NamedQuery(name = "Gebruiker.findByEmail",
+                query = "SELECT g FROM Gebruiker g "
+                        + "WHERE email = :email")
+})
 public class Gebruiker implements Principal {
 
+    /**
+     * Entity's unique identifier.
+     */
+    @Id
     @JsonView(View.Private.class)
-    private int id;
+    private long id;
 
     @NotEmpty
     @Length(min = 8)
@@ -59,6 +79,26 @@ public class Gebruiker implements Principal {
         BEHEERDER
     }
 
+    public Gebruiker() {
+    }
+
+    @JsonCreator
+    public Gebruiker(@JsonProperty("wachtwoord") String wachtwoord,
+                     @JsonProperty("email") String email,
+                     @JsonProperty("voornaam") String voornaam,
+                     @JsonProperty("achternaam") String achternaam,
+                     @JsonProperty("geboortedatum") Date geboortedatum,
+                     @JsonProperty("geregistreerd") Date geregistreerd,
+                     @JsonProperty("rol") String rol){
+        this.wachtwoord = wachtwoord;
+        this.email = email;
+        this.voornaam = voornaam;
+        this.achternaam = achternaam;
+        this.geboortedatum = geboortedatum;
+        this.geregistreerd = geregistreerd;
+        this.rol = Rol.valueOf(rol);
+    }
+
     /**
      * Returns the name of this principal.
      *
@@ -70,11 +110,11 @@ public class Gebruiker implements Principal {
         return getVoornaam() + getAchternaam();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

@@ -34,7 +34,7 @@ public class AuthenticationService implements Authenticator<BasicCredentials, Ge
     @Override
     public Optional<Gebruiker> authenticate(BasicCredentials credentials) throws AuthenticationException
     {
-        return gebruikerDAO.getByEmail(credentials.getUsername()).filter(
+        return gebruikerDAO.findByEmail(credentials.getUsername()).filter(
                 gebruiker -> gebruiker.getWachtwoord().equals(credentials.getPassword())
         );
     }

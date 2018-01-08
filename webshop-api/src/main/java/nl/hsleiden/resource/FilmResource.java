@@ -3,6 +3,7 @@ package nl.hsleiden.resource;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import io.dropwizard.hibernate.UnitOfWork;
 import nl.hsleiden.View;
 import nl.hsleiden.model.Film;
 import nl.hsleiden.service.FilmService;
@@ -27,16 +28,17 @@ public class FilmResource {
     @GET
     @Path("/{id}")
     @JsonView(View.Public.class)
+    @UnitOfWork
     public Film retrieve(@PathParam("id") int id)
     {
         return service.get(id);
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @JsonView(View.Protected.class)
-    public int create(@Valid Film film)
-    {
-        return service.add(film);
-    }
+//    @POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @JsonView(View.Protected.class)
+//    public int create(@Valid Film film)
+//    {
+//        return service.add(film);
+//    }
 }

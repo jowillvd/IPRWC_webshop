@@ -6,15 +6,12 @@
 
 package nl.hsleiden;
 
-import com.github.arteam.jdbi3.JdbiFactory;
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
 import com.google.inject.Provides;
-import io.dropwizard.setup.Environment;
+import io.dropwizard.hibernate.HibernateBundle;
 import nl.hsleiden.persistence.FilmDAO;
 import nl.hsleiden.persistence.GebruikerDAO;
 import nl.hsleiden.persistence.PersoonDAO;
-import org.jdbi.v3.core.Jdbi;
 
 /**
  *
@@ -22,53 +19,28 @@ import org.jdbi.v3.core.Jdbi;
  */
 public class ApiGuiceModule extends AbstractModule {
 
-    private Jdbi jdbi;
+    private final HibernateBundle<ApiConfiguration> hibernateBundle;
 
-    @Provides
-    public Jdbi prepareJdbi(Environment environment,
-                           ApiConfiguration configuration) throws ClassNotFoundException {
-        // setup DB access including DAOs
-        // implementing a singleton pattern here but avoiding
-        // Guice to initialize DB connection too early
-        if (jdbi == null) {
-            final JdbiFactory factory = new JdbiFactory();
-            jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
-        }
-        return jdbi;
+    public ApiGuiceModule(HibernateBundle<ApiConfiguration> hibernateBundle) {
+        this.hibernateBundle = hibernateBundle;
     }
 
     @Provides
-    public GebruikerDAO gebruikerDAO(Jdbi jdbi) {
-        return jdbi.onDemand(GebruikerDAO.class);
+    public FilmDAO filmDAO() {
+        return new FilmDAO(hibernateBundle.getSessionFactory());
     }
 
     @Provides
-    public PersoonDAO persoonDAO(Jdbi jdbi) {
-        return jdbi.onDemand(PersoonDAO.class);
+    public GebruikerDAO gebruikerDAO() {
+        return new GebruikerDAO(hibernateBundle.getSessionFactory());
     }
 
     @Provides
-    public FilmDAO filmDAO(Jdbi jdbi) {
-        return jdbi.onDemand(FilmDAO.class);
+    public PersoonDAO persoonDAO() {
+        return new PersoonDAO(hibernateBundle.getSessionFactory());
     }
 
     @Override
     protected void configure() {
-//        bind(DataSourceLocator.class).to(DefaultDataSourceLocator.class).in(Scopes.SINGLETON);
-//        bind(DBI.class).toProvider(DBIProvider.class).in(Scopes.SINGLETON);
-//
-//        bindDao(binder(), BranchDao.class);
-//        bindDao(binder(), ModuleDao.class);
-//        bindDao(binder(), StateDao.class);
-//        bindDao(binder(), RepositoryBuildDao.class);
-//        bindDao(binder(), ModuleBuildDao.class);
-//        bindDao(binder(), DependenciesDao.class);
-//        bindDao(binder(), MalformedFileDao.class);
-//        bindDao(binder(), InstantMessageConfigurationDao.class);
-//        bindDao(binder(), InterProjectBuildDao.class);
-//        bindDao(binder(), InterProjectBuildMappingDao.class);
-//        bindDao(binder(), BranchSettingsDao.class);
-//        bindDao(binder(), MetricsDao.class);
-//        bindDao(binder(), QueueItemDao.class);
     }
 }

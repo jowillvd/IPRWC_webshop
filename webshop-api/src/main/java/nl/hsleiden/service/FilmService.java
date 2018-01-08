@@ -20,15 +20,15 @@ public class FilmService {
     }
 
     public Film get(int id) {
-        Film film = filmDAO.getById(id).orElse(null);
+        Film film = filmDAO.findById(id).orElse(null);
         return film;
     }
 
-    public int add(Film film) {
-        if(film.getRegisseur() != null){
-            film.getRegisseur().setId(persoonDAO.add(film.getRegisseur()));
-        }
-
-        return filmDAO.add(film, film.getRegisseur().getId());
-    }
+//    public int add(Film film) {
+//        if(film.getRegisseur() != null){
+//            film.getRegisseur().setId(persoonDAO.add(film.getRegisseur()));
+//        }
+//
+//        return filmDAO.add(film, film.getRegisseur().getId());
+//    }
 }
