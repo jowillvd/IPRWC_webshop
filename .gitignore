@@ -7,3 +7,11 @@
 /webshop-api/workshop-api.iml
 
 # Visual Studio Code ignores
+
+
+# Ignore Node Modules
+/webshop-client/node_modules
+
+# API project
+/webshop-api/db.properties
+/webshop-api/configuration.yml

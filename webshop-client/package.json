@@ -1,15 +1,12 @@
 {
-  "name": "WorkshopClient",
-  "description": "HSLeiden workshop demo application",
+  "name": "WebshopClient",
+  "description": "HSLeiden opdracht voor IPRWC",
   "version": "1.0.0",
   "license": "WTFPL",
-  
-  "repository":
-  {
+  "repository": {
     "type": "git",
-    "url": "git://github.com/pvvliet/workshop-client.git"
+    "url": "git://github.com/williamvdijk/IPRWC_webshop"
   },
-  
   "keywords": [
     "util",
     "functional",
@@ -17,12 +14,9 @@
     "client",
     "browser"
   ],
-  
-  "author": "Peter van Vliet",
+  "author": "Jordy van Dijk",
   "contributors": [],
-  
-  "dependencies":
-  {
+  "dependencies": {
     "@angular/animations": "^4.4.3",
     "@angular/common": "^4.4.3",
     "@angular/compiler": "^4.4.3",
@@ -46,9 +40,7 @@
     "traceur": "0.0.111",
     "hammerjs": "2.0.8"
   },
-  
-  "devDependencies":
-  {
-      "typescript": "^2.2.2"
+  "devDependencies": {
+    "typescript": "^2.2.2"
   }
 }

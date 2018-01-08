@@ -12,40 +12,36 @@ import io.dropwizard.auth.Authorizer;
 import io.dropwizard.auth.basic.BasicCredentials;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import nl.hsleiden.model.User;
-import nl.hsleiden.persistence.UserDAO;
+
+import nl.hsleiden.model.Gebruiker;
+import nl.hsleiden.persistence.GebruikerDAO;
 
 /**
  *
  * @author Peter van Vliet
  */
 @Singleton
-public class AuthenticationService implements Authenticator<BasicCredentials, User>, Authorizer<User>
+public class AuthenticationService implements Authenticator<BasicCredentials, Gebruiker>, Authorizer<Gebruiker>
 {
-    private final UserDAO userDAO;
-    
+    private final GebruikerDAO gebruikerDAO;
+
     @Inject
-    public AuthenticationService(UserDAO userDAO)
+    public AuthenticationService(GebruikerDAO gebruikerDAO)
     {
-        this.userDAO = userDAO;
+        this.gebruikerDAO = gebruikerDAO;
     }
 
     @Override
-    public Optional<User> authenticate(BasicCredentials credentials) throws AuthenticationException
+    public Optional<Gebruiker> authenticate(BasicCredentials credentials) throws AuthenticationException
     {
-        User user = userDAO.getByEmailAddress(credentials.getUsername());
-        
-        if (user != null && user.getPassword().equals(credentials.getPassword()))
-        {
-            return Optional.of(user);
-        }
-        
-        return Optional.empty();
+        return gebruikerDAO.getByEmail(credentials.getUsername()).filter(
+                gebruiker -> gebruiker.getWachtwoord().equals(credentials.getPassword())
+        );
     }
 
     @Override
-    public boolean authorize(User user, String roleName)
+    public boolean authorize(Gebruiker gebruiker, String roleName)
     {
-        return user.hasRole(roleName);
+        return gebruiker.hasRole(roleName);
     }
 }

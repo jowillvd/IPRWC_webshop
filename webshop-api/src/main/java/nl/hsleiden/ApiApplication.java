@@ -1,6 +1,7 @@
 
 package nl.hsleiden;
 
+import com.github.arteam.jdbi3.JdbiFactory;
 import com.google.inject.Module;
 import com.hubspot.dropwizard.guice.GuiceBundle.Builder;
 import com.hubspot.dropwizard.guice.GuiceBundle;
@@ -10,14 +11,18 @@ import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
+import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
-import nl.hsleiden.model.User;
+
+import nl.hsleiden.model.Gebruiker;
 import nl.hsleiden.service.AuthenticationService;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,15 +53,16 @@ public class ApiApplication extends Application<ApiConfiguration>
         
         bootstrap.addBundle(assetsBundle);
         bootstrap.addBundle(guiceBundle);
+        bootstrap.addBundle(new MultiPartBundle());
     }
     
     @Override
-    public void run(ApiConfiguration configuration, Environment environment)
+    public void run(ApiConfiguration configuration, Environment environment) throws Exception
     {
         name = configuration.getApiName();
         
         logger.info(String.format("Set API name to %s", name));
-        
+
         setupAuthentication(environment);
         configureClientFilter(environment);
     }
@@ -77,7 +83,7 @@ public class ApiApplication extends Application<ApiConfiguration>
         ApiUnauthorizedHandler unauthorizedHandler = guiceBundle.getInjector().getInstance(ApiUnauthorizedHandler.class);
         
         environment.jersey().register(new AuthDynamicFeature(
-            new BasicCredentialAuthFilter.Builder<User>()
+            new BasicCredentialAuthFilter.Builder<Gebruiker>()
                 .setAuthenticator(authenticationService)
                 .setAuthorizer(authenticationService)
                 .setRealm("SUPER SECRET STUFF")
@@ -86,7 +92,7 @@ public class ApiApplication extends Application<ApiConfiguration>
         );
         
         environment.jersey().register(RolesAllowedDynamicFeature.class);
-        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
+        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(Gebruiker.class));
     }
     
     private void configureClientFilter(Environment environment)
