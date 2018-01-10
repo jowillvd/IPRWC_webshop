@@ -3,12 +3,6 @@ package nl.hsleiden.persistence;
 import io.dropwizard.hibernate.AbstractDAO;
 import nl.hsleiden.model.Persoon;
 import org.hibernate.SessionFactory;
-import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
-import org.jdbi.v3.sqlobject.customizer.Bind;
-import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
-import org.jdbi.v3.sqlobject.statement.SqlQuery;
-import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
 import java.util.Optional;

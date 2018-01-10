@@ -31,4 +31,16 @@ public class FilmDAO extends AbstractDAO<Film> {
     public Optional<Film> findById(long id) {
         return Optional.ofNullable(get(id));
     }
+
+    public void delete(Film film) {
+        currentSession().delete(film);
+    }
+
+    public void update(Film film) {
+        currentSession().saveOrUpdate(film);
+    }
+
+    public Optional<Film> set(Film film) {
+        return Optional.ofNullable(persist(film));
+    }
 }

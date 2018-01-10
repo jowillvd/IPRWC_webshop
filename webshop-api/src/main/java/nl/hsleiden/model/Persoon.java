@@ -19,11 +19,12 @@ import javax.persistence.*;
 @Table(name = "personen")
 @NamedQueries({
         @NamedQuery(name = "Persoon.getAll",
-                query = "SELECT p FROM Persoon p"),
+                    query = "SELECT p FROM Persoon p"),
+
         @NamedQuery(name = "Persoon.findByName",
-                query = "SELECT p FROM Persoon p "
-                        + "WHERE voornaam LIKE :naam"
-                        + " OR achternaam LIKE :naam")
+                    query = "SELECT p FROM Persoon p " +
+                            "WHERE voornaam LIKE :naam" +
+                            " OR achternaam LIKE :naam")
 })
 public class Persoon {
 
@@ -31,6 +32,7 @@ public class Persoon {
      * Entity's unique identifier.
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(View.Public.class)
     private long id;
 

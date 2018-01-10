@@ -16,16 +16,16 @@ import javax.persistence.*;
  * @author Jordy van Dijk
  */
 @Entity
-@Table(name = "genres")
+@Table(name = "filmtypes")
 @NamedQueries({
-        @NamedQuery(name = "Genre.getAll",
-                    query = "SELECT g FROM Genre g"),
+        @NamedQuery(name = "Filmtype.getAll",
+                    query = "SELECT ft FROM Filmtype ft"),
 
-        @NamedQuery(name = "Genre.findByName",
-                    query = "SELECT g FROM Genre g " +
-                            "WHERE naam like :naam")
+        @NamedQuery(name = "Filmtype.findByType",
+                    query = "SELECT ft FROM Filmtype ft " +
+                            "WHERE titel like :titel")
 })
-public class Genre {
+public class Filmtype {
 
     /**
      * Entity's unique identifier.
@@ -38,22 +38,21 @@ public class Genre {
     @NotEmpty
     @Length(min = 1, max = 255)
     @JsonView(View.Public.class)
-    private String naam;
+    private String type;
 
-    @Length(max = 750)
     @JsonView(View.Public.class)
     private String beschrijving;
 
     /**
      * A no-argument constructor.
      */
-    public Genre(){
+    public Filmtype(){
     }
 
     @JsonCreator
-    public Genre(@JsonProperty("naam") String naam,
+    public Filmtype(@JsonProperty("type") String type,
                 @JsonProperty("beschrijving") String beschrijving){
-        this.naam = naam;
+        this.type = type;
         this.beschrijving = beschrijving;
     }
 
@@ -65,12 +64,12 @@ public class Genre {
         this.id = id;
     }
 
-    public String getNaam() {
-        return naam;
+    public String getType() {
+        return type;
     }
 
-    public void setNaam(String naam) {
-        this.naam = naam;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getBeschrijving() {
@@ -80,4 +79,5 @@ public class Genre {
     public void setBeschrijving(String beschrijving) {
         this.beschrijving = beschrijving;
     }
+
 }

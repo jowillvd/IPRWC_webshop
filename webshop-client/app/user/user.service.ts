@@ -18,15 +18,12 @@ export class UserService
         
     }
     
-    public getAll(): Observable<User[]>
-    {
+    public getAll(): Observable<User[]> {
         return this.api.get<User[]>('users');
     }
     
-    public register(user: User): void
-    {
-        let data =
-        {
+    public register(user: User): void {
+        let data = {
             fullName: user.fullName,
             postcode: user.postcode,
             streetnumber: user.streetnumber,

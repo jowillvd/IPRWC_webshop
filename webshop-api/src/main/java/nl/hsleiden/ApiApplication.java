@@ -1,7 +1,6 @@
 
 package nl.hsleiden;
 
-import com.github.arteam.jdbi3.JdbiFactory;
 import com.google.inject.Module;
 import com.hubspot.dropwizard.guice.GuiceBundle.Builder;
 import com.hubspot.dropwizard.guice.GuiceBundle;
@@ -11,24 +10,19 @@ import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
-import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.PooledDataSourceFactory;
-import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
-import io.dropwizard.hibernate.ScanningHibernateBundle;
+import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
 
-import nl.hsleiden.model.Film;
-import nl.hsleiden.model.Gebruiker;
-import nl.hsleiden.model.Persoon;
+import nl.hsleiden.model.*;
+import nl.hsleiden.persistence.GebruikerDAO;
 import nl.hsleiden.service.AuthenticationService;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import org.jdbi.v3.core.Handle;
-import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,11 +34,20 @@ public class ApiApplication extends Application<ApiConfiguration>
 {
     private final Logger logger = LoggerFactory.getLogger(ApiApplication.class);
 
-    private final HibernateBundle<ApiConfiguration> hibernateBundle
-            = new HibernateBundle<ApiConfiguration>(
-                    Film.class,
-                    Gebruiker.class,
-                    Persoon.class
+    private final HibernateBundle<ApiConfiguration> hibernateBundle = new HibernateBundle<ApiConfiguration>(
+            Film.class,
+            Filmgenre.class,
+            Filmticket.class,
+            Filmtype.class,
+            Filmvertoning.class,
+            Gebruiker.class,
+            Genre.class,
+            Organisatie.class,
+            Persoon.class,
+            Tarief.class,
+            Theater.class,
+            Toegangsbewijs.class,
+            Zaal.class
     ) {
         @Override
         public PooledDataSourceFactory getDataSourceFactory(ApiConfiguration configuration) {
@@ -97,7 +100,10 @@ public class ApiApplication extends Application<ApiConfiguration>
     
     private void setupAuthentication(Environment environment)
     {
-        AuthenticationService authenticationService = guiceBundle.getInjector().getInstance(AuthenticationService.class);
+
+        AuthenticationService authenticationService = new UnitOfWorkAwareProxyFactory(hibernateBundle)
+                .create(AuthenticationService.class, GebruikerDAO.class, new GebruikerDAO(hibernateBundle.getSessionFactory()));
+        //AuthenticationService authenticationService = guiceBundle.getInjector().getInstance(AuthenticationService.class);
         ApiUnauthorizedHandler unauthorizedHandler = guiceBundle.getInjector().getInstance(ApiUnauthorizedHandler.class);
         
         environment.jersey().register(new AuthDynamicFeature(

@@ -1,7 +1,12 @@
 package nl.hsleiden.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import nl.hsleiden.View;
+
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Meer informatie over validatie:
@@ -9,38 +14,80 @@ import nl.hsleiden.View;
  *
  * @author Jordy van Dijk
  */
+@Entity
+@Table(name = "toegangsbewijzen")
 public class Toegangsbewijs {
 
-    @JsonView(View.Protected.class)
-    private long barcode;
+    /**
+     * Entity's unique identifier.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(View.Public.class)
+    private long id;
 
-    @JsonView(View.Protected.class)
-    private Filmticket filmticket;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ticket")
+    @JsonView(View.Public.class)
+    private Filmticket ticket;
 
-    @JsonView(View.Protected.class)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "gebruiker")
+    @JsonView(View.Public.class)
     private Gebruiker gebruiker;
 
-    public long getBarcode() {
-        return barcode;
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonView(View.Public.class)
+    private Date aangemaakt;
+
+    /**
+     * A no-argument constructor.
+     */
+    public Toegangsbewijs(){
     }
 
-    public void setBarcode(long barcode) {
-        this.barcode = barcode;
+    @JsonCreator
+    public Toegangsbewijs(@JsonProperty("filmticket") Filmticket ticket,
+                @JsonProperty("gebruiker") Gebruiker gebruiker,
+                @JsonProperty("aangemaakt") Date aangemaakt){
+        this.ticket = ticket;
+        this.gebruiker = gebruiker;
+        this.aangemaakt = aangemaakt;
     }
 
-    public Filmticket getFilmticket() {
-        return filmticket;
+    public long getId() {
+        return id;
     }
 
-    public void setFilmticket(Filmticket filmticket) {
-        this.filmticket = filmticket;
+    public void setId(long id) {
+        this.id = id;
     }
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    public Filmticket getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(Filmticket ticket) {
+        this.ticket = ticket;
+    }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     public Gebruiker getGebruiker() {
         return gebruiker;
     }
 
     public void setGebruiker(Gebruiker gebruiker) {
         this.gebruiker = gebruiker;
+    }
+
+    public Date getAangemaakt() {
+        return aangemaakt;
+    }
+
+    public void setAangemaakt(Date aangemaakt) {
+        this.aangemaakt = aangemaakt;
     }
 }

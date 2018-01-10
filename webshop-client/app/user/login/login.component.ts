@@ -9,17 +9,15 @@ import { User } from '../user';
     templateUrl: 'app/user/login/login.component.html',
     styleUrls: ['app/user/login/login.component.css'],
 })
-export class LoginComponent
-{
+export class LoginComponent {
+
     user: User = new User();
     
-    constructor(private userService: UserService)
-    {
+    constructor(private userService: UserService) {
         
     }
     
-    login()
-    {
+    login() {
         this.userService.login(this.user, false);
     }
 }

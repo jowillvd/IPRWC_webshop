@@ -23,14 +23,16 @@ import java.util.Date;
 @Table(name = "gebruikers")
 @NamedQueries({
         @NamedQuery(name = "Gebruiker.getAll",
-                query = "SELECT g FROM Gebruiker g"),
+                    query = "SELECT g FROM Gebruiker g"),
+
         @NamedQuery(name = "Gebruiker.findByName",
-                query = "SELECT g FROM Gebruiker g "
-                        + "WHERE voornaam LIKE :naam"
-                        + " OR achternaam LIKE :naam"),
+                    query = "SELECT g FROM Gebruiker g " +
+                            "WHERE voornaam LIKE :naam" +
+                            "   OR achternaam LIKE :naam"),
+
         @NamedQuery(name = "Gebruiker.findByEmail",
-                query = "SELECT g FROM Gebruiker g "
-                        + "WHERE email = :email")
+                    query = "SELECT g FROM Gebruiker g " +
+                            "WHERE email = :mail")
 })
 public class Gebruiker implements Principal {
 
@@ -38,6 +40,7 @@ public class Gebruiker implements Principal {
      * Entity's unique identifier.
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(View.Private.class)
     private long id;
 
@@ -62,15 +65,18 @@ public class Gebruiker implements Principal {
     @JsonView(View.Public.class)
     public String achternaam;
 
-    @JsonView(View.Protected.class)
-    private Date geboortedatum;
-
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonView(View.Private.class)
     private Date geregistreerd;
 
-    @JsonView(View.Public.class)
-    private Rol rol;
+    @Temporal(TemporalType.DATE)
+    @JsonView(View.Protected.class)
+    private Date geboortedatum;
 
+    @JsonView(View.Public.class)
+    private String rol;
+
+    //TODO: USING ENUMERATION FOR ROL
     private enum Rol {
         STANDAARD,
         ADMIN,
@@ -96,7 +102,7 @@ public class Gebruiker implements Principal {
         this.achternaam = achternaam;
         this.geboortedatum = geboortedatum;
         this.geregistreerd = geregistreerd;
-        this.rol = Rol.valueOf(rol);
+        this.rol = rol;
     }
 
     /**
@@ -155,7 +161,7 @@ public class Gebruiker implements Principal {
     }
 
     public void setGeboortedatum(Date geboortedatum) {
-        this.geboortedatum = geboortedatum;
+        this.geboortedatum = new Date(geboortedatum.getTime());
     }
 
     public Date getGeregistreerd() {
@@ -163,10 +169,18 @@ public class Gebruiker implements Principal {
     }
 
     public void setGeregistreerd(Date geregistreerd) {
-        this.geregistreerd = geregistreerd;
+        this.geregistreerd = new Date(geregistreerd.getTime());
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public String getRol() {
+        return rol;
     }
 
     public boolean hasRole(String role) {
-        return this.rol.name().equals(role);
+        return this.rol.equals(role);
     }
 }

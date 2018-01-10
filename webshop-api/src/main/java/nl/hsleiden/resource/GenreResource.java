@@ -7,37 +7,41 @@ import io.dropwizard.auth.Auth;
 import io.dropwizard.hibernate.UnitOfWork;
 import nl.hsleiden.View;
 import nl.hsleiden.model.Gebruiker;
-import nl.hsleiden.service.GebruikerService;
+import nl.hsleiden.model.Genre;
+import nl.hsleiden.service.GenreService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Singleton
-@Path("/gebruikers")
+@Path("/genres")
 @Produces(MediaType.APPLICATION_JSON)
-public class GebruikerResource {
+public class GenreResource {
 
-    private final GebruikerService service;
+    private final GenreService service;
 
     @Inject
-    public GebruikerResource(GebruikerService service) {
+    public GenreResource(GenreService service)
+    {
         this.service = service;
     }
 
     @GET
     @Path("/{id}")
-    @JsonView(View.Public.class)
+    @JsonView(View.Protected.class)
     @UnitOfWork
-    public Gebruiker get(@PathParam("id") int id) {
+    public Genre retrieve(@PathParam("id") int id)
+    {
         return service.get(id);
     }
 
     @GET
     @JsonView(View.Public.class)
     @UnitOfWork
-    public List<Gebruiker> get() {
+    public List<Genre> get() {
         return service.get();
     }
 
@@ -45,34 +49,37 @@ public class GebruikerResource {
     @Path("/search/{name}")
     @JsonView(View.Public.class)
     @UnitOfWork
-    public List<Gebruiker> search(@PathParam("name") String name) {
+    public List<Genre> search(@PathParam("name") String name) {
         return service.search(name);
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @JsonView(View.Protected.class)
+    @RolesAllowed("ADMIN")
     @UnitOfWork
-    public Gebruiker create(@Valid Gebruiker gebruiker) {
-        return service.set(gebruiker);
+    public Genre create(@Valid Genre genre) {
+        return service.set(genre);
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @JsonView(View.Protected.class)
+    @RolesAllowed("ADMIN")
     @UnitOfWork
-    public void update(@PathParam("id") int id, @Auth Gebruiker authenticator, Gebruiker gebruiker) {
-        service.update(authenticator, id, gebruiker);
+    public void update(@PathParam("id") int id, @Auth Gebruiker authenticator, Genre genre) {
+        service.update(id, genre);
     }
 
     @DELETE
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @JsonView(View.Protected.class)
+    @RolesAllowed("ADMIN")
     @UnitOfWork
     public void delete(@PathParam("id") int id, @Auth Gebruiker authenticator) {
-        service.delete(authenticator, id);
+        service.delete(id);
     }
 
 }

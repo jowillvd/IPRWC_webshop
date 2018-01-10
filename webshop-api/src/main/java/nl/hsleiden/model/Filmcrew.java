@@ -3,12 +3,23 @@ package nl.hsleiden.model;
 import com.fasterxml.jackson.annotation.JsonView;
 import nl.hsleiden.View;
 
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
 /**
  * Meer informatie over validatie:
  * http://hibernate.org/validator/
  *
  * @author Jordy van Dijk
  */
+@Entity
+@Table(name = "filmcrew")
+@NamedQueries({
+        @NamedQuery(name = "Filmcrew.getAll",
+                query = "SELECT fc FROM Filmcrew fc")
+})
 public class Filmcrew {
 
     @JsonView(View.Public.class)

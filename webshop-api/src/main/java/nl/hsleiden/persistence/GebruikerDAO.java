@@ -36,10 +36,20 @@ public class GebruikerDAO extends AbstractDAO<Gebruiker> {
     }
 
     public Optional<Gebruiker> findByEmail(String email) {
-
         return Optional.ofNullable(uniqueResult(namedQuery("Gebruiker.findByEmail")
                 .setParameter("mail", email))
         );
+    }
 
+    public void delete(Gebruiker gebruiker) {
+        currentSession().delete(gebruiker);
+    }
+
+    public void update(Gebruiker gebruiker) {
+        currentSession().saveOrUpdate(gebruiker);
+    }
+
+    public Optional<Gebruiker> set(Gebruiker gebruiker) {
+        return Optional.ofNullable(persist(gebruiker));
     }
 }

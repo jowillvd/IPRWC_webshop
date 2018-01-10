@@ -1,9 +1,13 @@
 package nl.hsleiden.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import nl.hsleiden.View;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.persistence.*;
 
 /**
  * Meer informatie over validatie:
@@ -11,8 +15,23 @@ import org.hibernate.validator.constraints.NotEmpty;
  *
  * @author Jordy van Dijk
  */
+@Entity
+@Table(name = "theaters")
+@NamedQueries({
+        @NamedQuery(name = "Theater.getAll",
+                    query = "SELECT t FROM Theater t"),
+
+        @NamedQuery(name = "Theater.findByName",
+                    query = "SELECT t FROM Theater t " +
+                            "WHERE naam like :name")
+})
 public class Theater {
 
+    /**
+     * Entity's unique identifier.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(View.Public.class)
     private int id;
 
@@ -21,6 +40,8 @@ public class Theater {
     @JsonView(View.Public.class)
     private String naam;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "organisatie")
     @JsonView(View.Public.class)
     private Organisatie organisatie;
 
@@ -39,6 +60,25 @@ public class Theater {
     @JsonView(View.Public.class)
     private String postcode;
 
+    /**
+     * A no-argument constructor.
+     */
+    public Theater(){
+    }
+
+    @JsonCreator
+    public Theater(@JsonProperty("naam") String naam,
+                   @JsonProperty("organisatie") Organisatie organisatie,
+                   @JsonProperty("straat") String straat,
+                   @JsonProperty("plaats") String plaats,
+                   @JsonProperty("postcode") String postcode){
+        this.naam = naam;
+        this.organisatie = organisatie;
+        this.straat = straat;
+        this.plaats = plaats;
+        this.postcode = postcode;
+    }
+
     public int getId() {
         return id;
     }
@@ -55,6 +95,8 @@ public class Theater {
         this.naam = naam;
     }
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     public Organisatie getOrganisatie() {
         return organisatie;
     }

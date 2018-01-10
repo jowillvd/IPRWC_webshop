@@ -2,33 +2,83 @@ package nl.hsleiden.service;
 
 import com.google.inject.Inject;
 import nl.hsleiden.model.Film;
+import nl.hsleiden.model.Gebruiker;
 import nl.hsleiden.persistence.FilmDAO;
-import nl.hsleiden.persistence.PersoonDAO;
 
 import javax.inject.Singleton;
+import java.util.List;
 
 @Singleton
 public class FilmService {
 
     FilmDAO filmDAO;
-    PersoonDAO persoonDAO;
 
     @Inject
-    public FilmService(FilmDAO filmDAO, PersoonDAO persoonDAO) {
+    public FilmService(FilmDAO filmDAO) {
         this.filmDAO = filmDAO;
-        this.persoonDAO = persoonDAO;
     }
 
-    public Film get(int id) {
+    /**
+     * Get single film by unique id
+     *
+     * @param id
+     * @return
+     */
+    public Film get(long id) {
         Film film = filmDAO.findById(id).orElse(null);
         return film;
     }
 
-//    public int add(Film film) {
-//        if(film.getRegisseur() != null){
-//            film.getRegisseur().setId(persoonDAO.add(film.getRegisseur()));
-//        }
-//
-//        return filmDAO.add(film, film.getRegisseur().getId());
-//    }
+    /**
+     * Get all films
+     *
+     * @return
+     */
+    public List<Film> get() {
+        List<Film> films = filmDAO.getAll();
+        return films.size() > 0 ? films : null;
+    }
+
+    /**
+     * Search films by given titel
+     *
+     * @param titel search value
+     * @return List of users if found
+     */
+    public List<Film> search(String titel) {
+        List<Film> films = filmDAO.findByName(titel);
+        return films.size() > 0 ? films : null;
+    }
+
+    /**
+     * @param authenticator
+     * @param id
+     * @param film
+     */
+    public void update(Gebruiker authenticator, long id, Film film) {
+        film.setId(id);
+        if (get(id).getId() == film.getId()) {
+            filmDAO.update(film);
+        }
+    }
+
+    /**
+     * @param film
+     * @return
+     */
+    public Film set(Film film) {
+        return filmDAO.set(film).orElse(null);
+    }
+
+    /**
+     * @param authenticator
+     * @param id
+     */
+    public void delete(Gebruiker authenticator, long id) {
+        Film film = get(id);
+        if (film != null) {
+            filmDAO.delete(film);
+        }
+    }
+
 }

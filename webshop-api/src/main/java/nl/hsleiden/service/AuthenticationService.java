@@ -13,12 +13,13 @@ import io.dropwizard.auth.basic.BasicCredentials;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.dropwizard.hibernate.UnitOfWork;
 import nl.hsleiden.model.Gebruiker;
 import nl.hsleiden.persistence.GebruikerDAO;
 
 /**
  *
- * @author Peter van Vliet
+ * @author Jordy van Dijk
  */
 @Singleton
 public class AuthenticationService implements Authenticator<BasicCredentials, Gebruiker>, Authorizer<Gebruiker>
@@ -32,6 +33,7 @@ public class AuthenticationService implements Authenticator<BasicCredentials, Ge
     }
 
     @Override
+    @UnitOfWork
     public Optional<Gebruiker> authenticate(BasicCredentials credentials) throws AuthenticationException
     {
         return gebruikerDAO.findByEmail(credentials.getUsername()).filter(
