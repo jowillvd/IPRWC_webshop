@@ -41,11 +41,11 @@ public class Gebruiker implements Principal {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(View.Private.class)
+    @JsonView(View.Public.class)
     private long id;
 
     @NotEmpty
-    @Length(min = 8)
+    @Length(min = 6)
     @JsonView(View.Private.class)
     public String wachtwoord;
 

@@ -20,9 +20,9 @@ import java.util.Date;
         @NamedQuery(name = "Filmvertoning.getAll",
                     query = "SELECT fv FROM Filmvertoning fv"),
 
-        @NamedQuery(name = "Filmvertoning.findByFilm",
+        @NamedQuery(name = "Filmvertoning.findByFilmId",
                     query = "SELECT fv FROM Filmvertoning fv " +
-                            "WHERE film = :film")
+                            "WHERE film = :filmId")
 })
 public class Filmvertoning {
 
@@ -32,16 +32,19 @@ public class Filmvertoning {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(View.Public.class)
-    private int id;
+    private long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "film")
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "film")
+//    @JsonView(View.Public.class)
+//    private Film film;
+
     @JsonView(View.Public.class)
-    private Film film;
+    private long film;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "zaal")
-    @JsonView(View.Public.class)
+    @JsonView(View.Protected.class)
     private Zaal zaal;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -65,7 +68,8 @@ public class Filmvertoning {
     }
 
     @JsonCreator
-    public Filmvertoning(@JsonProperty("film") Film film,
+    public Filmvertoning(@JsonProperty("film") long film,
+//            @JsonProperty("film") Film film,
                 @JsonProperty("zaal") Zaal zaal,
                 @JsonProperty("tarief") Tarief tarief,
                 @JsonProperty("tijd") Date tijd,
@@ -77,21 +81,30 @@ public class Filmvertoning {
         this.filmtype = filmtype;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    public Film getFilm() {
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @PrimaryKeyJoinColumn
+//    public Film getFilm() {
+//        return film;
+//    }
+//
+//    public void setFilm(Film film) {
+//        this.film = film;
+//    }
+
+
+    public long getFilm() {
         return film;
     }
 
-    public void setFilm(Film film) {
+    public void setFilm(long film) {
         this.film = film;
     }
 

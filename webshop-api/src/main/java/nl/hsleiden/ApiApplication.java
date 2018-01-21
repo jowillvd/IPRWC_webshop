@@ -47,7 +47,8 @@ public class ApiApplication extends Application<ApiConfiguration>
             Tarief.class,
             Theater.class,
             Toegangsbewijs.class,
-            Zaal.class
+            Zaal.class,
+            Gekocht.class
     ) {
         @Override
         public PooledDataSourceFactory getDataSourceFactory(ApiConfiguration configuration) {

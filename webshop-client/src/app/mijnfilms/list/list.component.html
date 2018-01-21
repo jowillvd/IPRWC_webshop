@@ -1,0 +1,8 @@
+<h1>
+    Mijn gekochte films
+</h1>
+<mat-grid-list cols="3" rowHeight="12:17" gutterSize="48px">
+        <mat-grid-tile *ngFor="let gekocht of items" class="film-poster">
+            <a [routerLink]="['/mijnfilms', gekocht.id]"><img src="{{gekocht.film.posterurl}}" alt=""></a>
+        </mat-grid-tile>
+</mat-grid-list>

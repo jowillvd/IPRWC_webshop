@@ -75,4 +75,11 @@ public class GebruikerResource {
         service.delete(authenticator, id);
     }
 
+    @GET
+    @Path("/me")
+    @JsonView(View.Private.class)
+    public Gebruiker authenticate(@Auth Gebruiker authenticator) {
+        return authenticator;
+    }
+
 }

@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row">
+        <div class="two-thirds column">
+            <button mat-button [routerLink]="['/films']"><i class="material-icons">keyboard_arrow_left</i> FILMS</button>
+            <mat-card class="promo-card">
+                <mat-card-content>
+                    <h1>
+                        {{film.titel}}
+                    </h1>
+                    <p>
+                        {{film.beschrijving}}
+                    </p>
+                    <hr>
+                    <div *ngIf="!mijnFilm; else notInMijnFilm">
+                        <p>Prijs €{{film.prijs}}</p>
+                        <button mat-raised-button class="mat-primary" (click)="addToCart()" *ngIf="!inShopcart">Bestel Film</button>
+                    </div>
+                    <ng-template #notInMijnFilm>
+                        <p>
+                            Je hebt deze film al in bezit/gekocht,
+                            ga naar <a [routerLink]="['/mijnfilms']">mijn films</a>.
+                        </p>
+                    </ng-template>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="one-third column film-poster">
+            <img src="{{film.posterurl}}" alt="">
+        </div>
+    </div>
+</div>

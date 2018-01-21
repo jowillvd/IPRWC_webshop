@@ -1,0 +1,19 @@
+<header>
+    <mat-toolbar>
+        <nav>
+            <ul>
+                <li><a mat-raised-button class="mat-primary" routerLink="/"><i class="material-icons">local_movies</i><span> Local Play</span></a></li>
+                <li><a mat-button routerLink="/films">Bekijk  alle films</a></li>
+                <!-- <li><a mat-button routerLink="/bioscopen">Bioscopen</a></li> -->
+            </ul>
+        </nav>
+        <span class="fill-remaining-space"></span>
+        <div>
+            <button *ngIf="!authenticated" mat-raised-button class="mat-primary" routerLink="/registreren">Registreren</button>
+            <button *ngIf="authenticated" mat-raised-button class="mat-primary" routerLink="/mijnfilms">Mijn films</button>
+            <button mat-raised-button routerLink="/shoppingcart"><i class="material-icons">shopping_cart</i></button>
+            <button *ngIf="authenticated" mat-raised-button (click)="logout()">Uitloggen</button>
+        </div>
+    </mat-toolbar>
+</header>
+

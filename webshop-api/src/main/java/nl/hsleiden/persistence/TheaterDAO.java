@@ -19,11 +19,11 @@ public class TheaterDAO extends AbstractDAO<Theater> {
     }
 
     public List<Theater> getAll() {
-        return list(namedQuery("Theater.getAll"));
+        return list(namedQuery("Tarief.getAll"));
     }
 
     public List<Theater> findByName(String name) {
-        return list(namedQuery("Theater.findByName")
+        return list(namedQuery("Tarief.findByName")
                 .setParameter("naam", "%" + name + "%")
         );
     }

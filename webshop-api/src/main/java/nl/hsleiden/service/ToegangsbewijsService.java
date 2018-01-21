@@ -6,6 +6,7 @@ import nl.hsleiden.persistence.ToegangsbewijsDAO;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 @Singleton
 public class ToegangsbewijsService {
@@ -26,6 +27,17 @@ public class ToegangsbewijsService {
     public Toegangsbewijs get(long id) {
         Toegangsbewijs toegangsbewijs = toegangsbewijsDAO.findById(id).orElse(null);
         return toegangsbewijs;
+    }
+
+    /**
+     * Get all toegangsbewijs by user id
+     *
+     * @param id
+     * @return
+     */
+    public List<Toegangsbewijs> getByUser(long id) {
+        List<Toegangsbewijs> toegangsbewijs = toegangsbewijsDAO.findByUser(id);
+        return toegangsbewijs.size() > 0 ? toegangsbewijs : null;
     }
 
     /**

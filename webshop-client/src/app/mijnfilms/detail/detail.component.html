@@ -1,0 +1,13 @@
+<div class="container" >
+    <button mat-button [routerLink]="['/mijnfilms']"><i class="material-icons">keyboard_arrow_left</i>MIJN FILMS</button>
+    <div style="text-align: left;">
+
+    </div>
+    <mat-card class="promo-card">
+        <iframe mat-card-image height="600" [src]=filmUrl frameborder="0" allowfullscreen></iframe>
+        <mat-card-content>
+            <mat-card-title>{{gekocht?.film.titel}}</mat-card-title>
+            <p>{{gekocht?.film.beschrijving}}</p>
+        </mat-card-content>
+    </mat-card>
+</div>

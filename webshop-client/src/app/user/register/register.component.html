@@ -1,0 +1,49 @@
+<mat-card>
+    <mat-card-content class="container">
+        <div class="column one-half">
+            <mat-card-title>
+                <h1>Registreren</h1>
+            </mat-card-title>
+            <form name="registerForm" #registerForm="ngForm" (ngSubmit)="register()">
+                <mat-form-field class="full-width">
+                    <input matInput type="text" name="voornaam" placeholder="Voornaam" required [(ngModel)]="user.voornaam" #voornaam="ngModel" />
+                    <mat-error [hidden]="voornaam.valid">
+                        Dit veld is verplicht
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="full-width">
+                    <input matInput type="text" name="achternaam" placeholder="Achternaam" required [(ngModel)]="user.achternaam" #achternaam="ngModel" />
+                    <mat-error [hidden]="achternaam.valid">
+                        Dit veld is verplicht
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="full-width">
+                    <input matInput type="date" name="geboortedatum" placeholder="Geboortedatum" required [(ngModel)]="user.geboortedatum" #geboortedatum="ngModel" />
+                    <mat-error [hidden]="email.valid">
+                        Dit veld is verplicht
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="full-width">
+                    <input matInput type="mail" name="email" placeholder="E-mailadres" required [(ngModel)]="user.email" #email="ngModel" />
+                    <mat-error [hidden]="email.valid">
+                        Dit veld is verplicht
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="full-width">
+                    <input matInput type="password" name="wachtwoord" placeholder="Wachtwoord" required [(ngModel)]="user.wachtwoord" #wachtwoord="ngModel" />
+                    <mat-error [hidden]="wachtwoord.valid">
+                        Dit veld is verplicht
+                    </mat-error>
+                </mat-form-field>
+                <button mat-raised-button type="submit" class="mat-primary" [disabled]="!registerForm.valid">Registreren</button>
+            </form>
+        </div>
+        <div class="column one-half" style="text-align: center; margin-top:40px">
+            <div class="section hero">
+                <h2>Al in bezit van een account?</h2>
+                <p>Log dan in!</p>
+                <button mat-raised-button class="mat-primary" routerLink="/login">Inloggen</button>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

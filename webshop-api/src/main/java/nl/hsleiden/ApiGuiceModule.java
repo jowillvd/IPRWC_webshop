@@ -89,6 +89,11 @@ public class ApiGuiceModule extends AbstractModule {
         return new ZaalDAO(hibernateBundle.getSessionFactory());
     }
 
+    @Provides
+    public GekochtDAO gekochtDAO() {
+        return new GekochtDAO(hibernateBundle.getSessionFactory());
+    }
+
     @Override
     protected void configure() {
     }

@@ -15,6 +15,11 @@ import java.util.Date;
  * @author Jordy van Dijk
  */
 @Entity
+@NamedQueries({
+        @NamedQuery(name = "Toegangsbewijs.findByUserId",
+                query = "SELECT tb FROM Toegangsbewijs tb " +
+                        "WHERE gebruiker = :uId")
+})
 @Table(name = "toegangsbewijzen")
 public class Toegangsbewijs {
 

@@ -1,0 +1,5 @@
+<mat-grid-list cols="3" rowHeight="12:17" gutterSize="48px">
+        <mat-grid-tile *ngFor="let film of films" class="film-poster">
+            <a [routerLink]="['/films', film.id]"><img src="{{film.posterurl}}" alt=""></a>
+        </mat-grid-tile>
+</mat-grid-list>

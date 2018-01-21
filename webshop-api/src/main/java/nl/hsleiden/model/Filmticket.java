@@ -17,7 +17,12 @@ import javax.persistence.*;
 @Table(name = "filmtickets")
 @NamedQueries({
         @NamedQuery(name = "Filmticket.getAll",
-                    query = "SELECT ft FROM Filmticket ft")
+                    query = "SELECT ft FROM Filmticket ft"),
+
+        @NamedQuery(name = "Filmticket.findByFilmvertoningId",
+                    query = "SELECT ft FROM Filmticket ft " +
+                            "WHERE filmvertoning = :fvId" +
+                            " AND verkocht = 0")
 })
 public class Filmticket {
 
@@ -27,7 +32,7 @@ public class Filmticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(View.Public.class)
-    private int id;
+    private long id;
 
     @JsonView(View.Public.class)
     private int zitplaats;
@@ -37,6 +42,9 @@ public class Filmticket {
     @JsonView(View.Public.class)
     private Filmvertoning filmvertoning;
 
+    @JsonView(View.Public.class)
+    private int verkocht;
+
     /**
      * A no-argument constructor.
      */
@@ -45,16 +53,18 @@ public class Filmticket {
 
     @JsonCreator
     public Filmticket(@JsonProperty("zitplaats") int zitplaats,
-                @JsonProperty("filmvertoning") Filmvertoning filmvertoning){
+                      @JsonProperty("filmvertoning") Filmvertoning filmvertoning,
+                      @JsonProperty("verkocht") int verkocht){
         this.zitplaats = zitplaats;
         this.filmvertoning = filmvertoning;
+        this.verkocht = verkocht;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -74,5 +84,13 @@ public class Filmticket {
 
     public void setFilmvertoning(Filmvertoning filmvertoning) {
         this.filmvertoning = filmvertoning;
+    }
+
+    public int getVerkocht() {
+        return verkocht;
+    }
+
+    public void setVerkocht(int verkocht) {
+        this.verkocht = verkocht;
     }
 }

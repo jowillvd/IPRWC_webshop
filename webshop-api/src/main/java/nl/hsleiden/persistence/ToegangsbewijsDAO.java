@@ -4,6 +4,7 @@ import io.dropwizard.hibernate.AbstractDAO;
 import nl.hsleiden.model.Toegangsbewijs;
 import org.hibernate.SessionFactory;
 
+import java.util.List;
 import java.util.Optional;
 
 public class ToegangsbewijsDAO extends AbstractDAO<Toegangsbewijs> {
@@ -33,4 +34,10 @@ public class ToegangsbewijsDAO extends AbstractDAO<Toegangsbewijs> {
         return Optional.ofNullable(persist(toegangsbewijs));
     }
 
+    public List<Toegangsbewijs> findByUser(long id) {
+        return list(
+                namedQuery("Toegangsbewijs.findByUserId")
+                        .setParameter("uId", id)
+        );
+    }
 }

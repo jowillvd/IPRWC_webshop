@@ -22,9 +22,9 @@ public class TariefDAO extends AbstractDAO<Tarief> {
         return list(namedQuery("Tarief.getAll"));
     }
 
-    public List<Tarief> findByName(String name) {
-        return list(namedQuery("Tarief.findByName")
-                .setParameter("soort", "%" + name + "%")
+    public List<Tarief> findByName(int ftId) {
+        return list(namedQuery("Tarief.findByFilmtypeId")
+                .setParameter("type", ftId)
         );
     }
 

@@ -1,0 +1,54 @@
+<div class="container">
+    <div class="row">
+        <div class="two-thirds column">
+            <mat-card>
+                <mat-card-content>
+                    <mat-table #table [dataSource]="dataSource">
+                        <ng-container matColumnDef="posterurl">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <img src="{{element.film.posterurl}}" alt="">
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="titel">
+                            <mat-header-cell *matHeaderCellDef>Film titel</mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.film.titel}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="prijs">
+                            <mat-header-cell *matHeaderCellDef>Film prijs</mat-header-cell>
+                            <mat-cell *matCellDef="let element">€ {{element.film.prijs}} </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="one-third column">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>
+                        <h1>Mijn film shopping list</h1>
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <p>
+                        Aantal gekozen films:
+                        <br> {{shopcart.totalItems}} films
+                    </p>
+                    <p>
+                        Totaal prijs:
+                        <br> € {{shopcart.totalPrice}} -
+                    </p>
+                </mat-card-content>
+                <mat-card-actions *ngIf="shopcart.totalItems > 0">
+                    <button mat-raised-button color="primary" (click)="buyItems()">BESTELLEN</button>
+                    <button mat-button color="primary" (click)="emptyShopcart()">ANNULEREN</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</div>

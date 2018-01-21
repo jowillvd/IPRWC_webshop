@@ -22,7 +22,7 @@ import java.util.Date;
 
         @NamedQuery(name = "Tarief.findByName",
                     query = "SELECT t FROM Tarief t " +
-                            "WHERE soort LIKE :soort")
+                            "WHERE type = :type")
 })
 public class Tarief {
 
@@ -35,15 +35,13 @@ public class Tarief {
     private int id;
 
     @JsonView(View.Public.class)
-    private String soort;
+    private long type;
 
     @JsonView(View.Public.class)
     private Double prijs;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "theater")
     @JsonView(View.Public.class)
-    private Theater theater;
+    private long theater;
 
     /**
      * A no-argument constructor.
@@ -52,10 +50,10 @@ public class Tarief {
     }
 
     @JsonCreator
-    public Tarief(@JsonProperty("soort") String soort,
+    public Tarief(@JsonProperty("type") long type,
                 @JsonProperty("prijs") Double prijs,
-                @JsonProperty("theater") Theater theater){
-        this.soort = soort;
+                @JsonProperty("theater") long theater){
+        this.type = type;
         this.prijs = prijs;
         this.theater = theater;
     }
@@ -68,12 +66,12 @@ public class Tarief {
         this.id = id;
     }
 
-    public String getSoort() {
-        return soort;
+    public long getType() {
+        return type;
     }
 
-    public void setSoort(String soort) {
-        this.soort = soort;
+    public void setType(long type) {
+        this.type = type;
     }
 
     public Double getPrijs() {
@@ -84,13 +82,11 @@ public class Tarief {
         this.prijs = prijs;
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    public Theater getTheater() {
+    public long getTheater() {
         return theater;
     }
 
-    public void setTheater(Theater theater) {
+    public void setTheater(long theater) {
         this.theater = theater;
     }
 }

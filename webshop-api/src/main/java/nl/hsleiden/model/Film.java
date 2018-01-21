@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.format.ISODateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -58,6 +59,13 @@ public class Film {
     @JsonView(View.Protected.class)
     private String filmtrailer;
 
+    @JsonView(View.Public.class)
+    private String posterurl;
+
+    @JsonView(View.Public.class)
+    @NotNull
+    private Double prijs;
+
     /**
      * A no-argument constructor.
      */
@@ -66,15 +74,17 @@ public class Film {
 
     @JsonCreator
     public Film(@JsonProperty("titel") String titel,
-            @JsonProperty("regisseur") Persoon regisseur,
-            @JsonProperty("release") Date release,
-            @JsonProperty("beschrijving") String beschrijving,
-            @JsonProperty("filmtrailer") String filmtrailer){
+                @JsonProperty("regisseur") Persoon regisseur,
+                @JsonProperty("release") Date release,
+                @JsonProperty("beschrijving") String beschrijving,
+                @JsonProperty("filmtrailer") String filmtrailer,
+                @JsonProperty("prijs") Double prijs){
         this.titel = titel;
         this.regisseur = regisseur;
         this.release = release;
         this.beschrijving = beschrijving;
         this.filmtrailer = filmtrailer;
+        this.prijs = prijs;
     }
 
     public long getId() {
@@ -129,5 +139,13 @@ public class Film {
 
     public void setFilmtrailer(String filmtrailer) {
         this.filmtrailer = filmtrailer;
+    }
+
+    public String getPosterurl() {
+        return posterurl;
+    }
+
+    public void setPosterurl(String posterurl) {
+        this.posterurl = posterurl;
     }
 }
