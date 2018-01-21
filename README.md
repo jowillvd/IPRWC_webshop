@@ -37,10 +37,19 @@ Toegankelijk zonder AUTH:
 * GET: /api/gebruikers/{id}
 * GET: /api/gebruikers/search/{name}
 * POST: /api/gebruikers
+* GET: /api/films/{id}
+* GET: /api/films
 
 Enkel toegankelijk met AUTH:
 * GET: /api/gebruikers/me
 * PUT: /api/gebruikers/{id}
 * DELETE: /api/gebruikers/{id}
-* 
-
+* POST: /api/films
+* DELETE: /api/films/{id}
+* PUT: /api/films/{id}
+* POST: /api/filmsgekocht
+* GET: /api/filmsgekocht/{id}
+* GET: /api/filmsgekocht
+* GET: /api/filmsgekocht/contains/{id}
+* PUT: /api/filmsgekocht/{id}
+* DELETE: /api/filmsgekocht/{id}
