@@ -10,11 +10,11 @@ http://136.144.177.199/
 
 Inloggegevens Docent:
 * docent@hsleiden.nl
-* geheim2018
+* docent2018
 
 Inloggegevens Student:
 * student@hsleiden.nl
-* geheim2018
+* student2018
 
 ## Te gebruiken URI's client
 
@@ -42,4 +42,5 @@ Enkel toegankelijk met AUTH:
 * GET: /api/gebruikers/me
 * PUT: /api/gebruikers/{id}
 * DELETE: /api/gebruikers/{id}
+* 
 
